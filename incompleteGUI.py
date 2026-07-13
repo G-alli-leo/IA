@@ -27,7 +27,7 @@ class Test:
         leftFrame = ttk.Frame(root
     ).grid(column=1, sticky="NSE")
         #leftLabel = ttk.Label(leftFrame,text="1,2.1,2.").grid(column=1,row=2)
-        listButtons = ["Hey", "Hola", "Hello"]
+        listButtons = ["Inventory", "Graphs", "Warnings"]
 
 
 
