@@ -9,34 +9,32 @@ class Test:
         root.configure(background='#0D031B')
         root.title("FINALTEST")
 
-    def createNbuttons(self, soilFrame: ttk.Frame, vertical: bool,text: list[str]):
-        "Creates buttons and stores them in a class attribute. Takes a frame, a boolean for vertical or horizontal layout, and a list of button texts."
-        self.auto_buttons = []
-        if vertical:
-            for i, button_text in enumerate(text): #StackOverflow, thank you
-                autoButton = ttk.Button(soilFrame, text=button_text)
-                autoButton.grid(column=1, row=i)
-                self.auto_buttons.append(autoButton)
-        else:
-            for i, button_text in enumerate(text): #StackOverflow, thank you
-                autoButton = ttk.Button(soilFrame, text=button_text)
-                autoButton.grid(column=i, row=1)
-                self.auto_buttons.append(autoButton)
+        def createNbuttons(self, soilFrame, vertical: bool,text: list[str]):
+            "Creates buttons and stores them in a class attribute. Takes a frame, a boolean for vertical or horizontal layout, and a list of button texts."
+            self.auto_buttons = []
+            if vertical:
+                for i, button_text in enumerate(text): #StackOverflow, thank you
+                    autoButton = ttk.Button(soilFrame, text=button_text)
+                    autoButton.grid(column=1, row=i)
+                    self.auto_buttons.append(autoButton)
+            else:
+                for i, button_text in enumerate(text): #StackOverflow, thank you
+                    autoButton = ttk.Button(soilFrame, text=button_text)
+                    autoButton.grid(column=i, row=1)
+                    self.auto_buttons.append(autoButton)
     
+        def changeNbuttons(self):
+            # ttk buttons use styles for colors, but for basic config:
+            for button in self.auto_buttons:
+                button.config(text="Changed")
+
+
 # [#][][]
         leftFrame = ttk.Frame(root
     ).grid(column=1, sticky="NSE")
         #leftLabel = ttk.Label(leftFrame,text="1,2.1,2.").grid(column=1,row=2)
         listButtons = ["Inventory", "Graphs", "Warnings"]
-
-
-
-    # How you would modify it in another class method:
-    def changeNbuttons(self):
-        # ttk buttons use styles for colors, but for basic config:
-        for button in self.auto_buttons:
-            button.config(text="Changed")
-        
+        createNbuttons(self, leftFrame, True, listButtons)
 
 
 # [][#]][]
