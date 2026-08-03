@@ -10,7 +10,7 @@ ID is an INT; Name is a VARCHAR; Price is a Decimal with 10 total digits and 2 d
 # Specifying the ODBC driver, server name, database, etc. directly
     #TODO: Make the commands for query, insert, update, delete, and select. Make sure to commit or activate ;autocommit=True
     #Order: Insert, Delete, Query, Select, Update
-    #TODO: Add and substract from quantity, and update price.
+
     #TODO: Make the ID auto-increment in the database, so that the user doesn't have to input it
 conn_str = (
     "DRIVER={ODBC Driver 18 for SQL Server};SERVER=localhost\SQLEXPRESS;DATABASE=InventoryDB;Trusted_Connection=yes;TrustServerCertificate=yes;"  # Crucial bypass for SSL errors on local setups
@@ -21,6 +21,20 @@ try:
     cursor = conn.cursor()
     print("Successfully connected to SQL Server Express!")
 
+    def brand_new_table(cursor: pyodbc.Connection, table: str):
+        #TODO: Make it so Price and Quantity are optional on the function.
+        """
+        Creates a new table called {name} with the following columns: {table}ID (INT), {table}Name (VARCHAR), Price (DECIMAL), and Quantity (INT).
+        """
+        cursor.execute(f"""
+            CREATE TABLE {table}
+            {table + 'ID'} INT IDENTITY(1,1) PRIMARY KEY,
+            {table + 'Name'} VARCHAR(120),
+            Price DECIMAL(10, 2),
+            Quantity INT
+            )
+        """).commit()
+    
     def validate_data(data: list[str]):
         """
         Data subjected to the DB's rules. ID and Quantity must be integers, Price must be a decimal with 2 decimal places, and Name must be a string. The list must contain exactly 4 elements.
@@ -31,24 +45,51 @@ try:
         if length and ints and decimal == True:
             return True 
 
-    def strict_insert(cursor: pyodbc.Connection, data: list[str]):
+    def strict_insert(data: list[str]):
         """
         Inserts a new product into the Products table. Full data must be provided: [id, name, price, quantity].
         """
         if validate_data(data):
             cursor.execute("INSERT INTO Products (ProductID, ProductName, Quantity, Price) VALUES (?, ?, ?, ?)", (data[0], data[1], data[2], data[3]))
-            conn.commit()
         else:
             print("Data validation failed. Ensure ID and Quantity are integers, Price is a decimal with 2 decimal places, and Name is a string.")
-        
-    def ID_delete(cursor: pyodbc.Connection, ID: int):
+        #Might not work as intended
+    def ID_delete(ID: int):
         """
         Deletes a given product based on their ProductID 
         """
         cursor.execute("DELETE FROM Products WHERE ProductID=?", (ID))
 
-    #def strict_query(cursor: pyodbc.Connection, *data: list[str]):
-    #    cursor.execute("SELECT * FROM Products WHERE b=? AND c=?", (data[0], data[1]))
+    def query(query: str):
+        """
+        Executes a general SQL query and returns the results.
+        """
+        cursor.execute(query)
+        return cursor.fetchall()
+    
+    def ID_query(ID: int):
+        """
+        Queries a product based on their ProductID and returns the result.
+        """
+        cursor.execute(f'SELECT * FROM Products WHERE ProductID={ID}')
+        return cursor.fetchall()
+        
+    def Name_query(cursor: pyodbc.Cursor, name: str):
+        """
+        Queries a product based on their ProductName and returns the result. Searches for partial matches too.
+        """
+        cursor.execute(f'SELECT * FROM Products WHERE ProductName LIKE %{name}%')
+        return cursor.fetchall()
+        #Not checked
+    
+    def addQuantity(productID: int, value: int):
+        try:   
+            cursor.execute(f'UPDATE Products SET Quantity=Quantity+{value} WHERE ProductID={productID}')
+            print("Succesful update")
+        except Exception as e:
+            print(f"Connection failed: {e}")
 except Exception as e:
     print(f"Connection failed: {e}")
 
+
+        #TODO: Check for SQL injection vulnerabilities. Use parameterized queries instead of f-strings for user input.
