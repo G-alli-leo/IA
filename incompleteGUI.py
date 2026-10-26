@@ -1,12 +1,15 @@
 import tkinter as tk
 from tkinter import PhotoImage, Tk, ttk
 
+background_color = "#240E43"
+button_color = "#fefffb"
+
 class Test:
 
     def __init__(self, root):
         #root = tk.Tk() #TODO
         self.root = root
-        root.configure(background='#0D031B')
+        root.configure(background=background_color)
         root.title("FINALTEST")
 
     def createNbuttons(self, soilFrame: ttk.Frame, vertical: bool,text: list[str]):
