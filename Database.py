@@ -1,5 +1,6 @@
 """
-#Window
+#Old way of connecting. Discarded due to heavily relying on DSN, making it less portable and more difficult to set up on other machines.
+#It too was computanionally expensive 
 import pyodbc
 
 # Specifying the ODBC driver, server name, database, etc. directly
