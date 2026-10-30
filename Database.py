@@ -25,6 +25,42 @@ CREATE TABLE IF NOT EXISTS Products (
     Price REAL NOT NULL
 );
 """)
+def add_product(product_name, quantity, price):
+    cursor.execute("""
+    INSERT INTO Products (ProductName, Quantity, Price) 
+    VALUES (?, ?, ?)
+    """, (product_name, quantity, price))
+    conn.commit()
+"""
+#High risk, no reward. (SQL injection possible)
+def query_product(where_clause: str, *args):
+    sql = f"SELECT * FROM Products WHERE {where_clause}"
+    cursor.execute(sql, args)  # 'args' is automatically a tuple
+    return cursor.fetchall()
+"""
+def query_id(product_id: int):
+    cursor.execute("SELECT * FROM Products WHERE ProductID = ?", (product_id,))
+    return cursor.fetchall()
+
+def query_name(name: str):
+    cursor.execute("SELECT * FROM Products WHERE ProductName = ?", (name,))
+    return cursor.fetchall()
+
+def query_price_range(min_price: float, max_price: float):
+    cursor.execute("SELECT * FROM Products WHERE Price BETWEEN ? AND ?", (min_price, max_price))
+    return cursor.fetchall()
+
+def query_all():
+    cursor.execute("SELECT * FROM Products")
+
+
+def delete_ID(product_id: int):
+    cursor.execute("DELETE FROM Products WHERE ProductID = ?", (product_id,))
+    conn.commit()
+
+def delete_name(name: str):
+    cursor.execute("DELETE FROM Products WHERE ProductName = ?", (name,))
+    conn.commit()
 
 # Insert initial test item
 cursor.execute("""
@@ -34,7 +70,7 @@ VALUES (?, ?, ?)
 
 conn.commit()
 
-# Fetch and verify data
+# Fetch and verify data. Only The Product should appear for now
 cursor.execute("SELECT * FROM Products")
 print(cursor.fetchall())
 

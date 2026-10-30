@@ -1,15 +1,25 @@
-from tkinter import *
-from tkinter import ttk
-root = Tk()
-l =ttk.Label(root, text="Starting...")
-l.grid()
-def l_text(parameter: str):
-    l.configure(text="txt")
-l.bind('<Enter>', l_text("Moved mouse inside"))
-l.bind('<Leave>', l_text("Moved mouse outside"))
-l.bind('<ButtonPress-1>', lambda e: l.configure(text='Clicked left mouse button'))
-l.bind('<2>', lambda e: l.configure(text='Clicked THAT mouse button'))
-l.bind('<3>', lambda e: l.configure(text='Clicked third mouse button'))
-l.bind('<Double-1>', lambda e: l.configure(text='Double clicked'))
-l.bind('<B3-Motion>', lambda e: l.configure(text=f'third button drag to {e.x},{e.y}'))
-root.mainloop()
+from __future__ import annotations
+
+from pathlib import Path
+import sys
+from PySide6.QtCore import QUrl
+from PySide6.QtGui import QGuiApplication
+from PySide6.QtQuick import QQuickView
+
+# This example illustrates exposing a QStringList as a model in QML
+
+if __name__ == '__main__':
+    app = QGuiApplication(sys.argv)
+
+    dataList = ["Item 1", "Item 2", "Item 3", "Item 4"]
+
+    view = QQuickView()
+    view.setInitialProperties({"model": dataList})
+
+    qml_file = Path(__file__).parent / "view.qml"
+    view.setSource(QUrl.fromLocalFile(qml_file))
+    view.show()
+
+    r = app.exec()
+    del view
+    sys.exit(r)
